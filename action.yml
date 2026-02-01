@@ -28,6 +28,9 @@ inputs:
   custom-fork-owner:
     description: 'Custom winget-pkgs fork owner'
     required: false
+  ghes-token:
+    description: 'GHES authorization token'
+    required: false
 
 runs:
   using: "composite"
@@ -54,13 +57,15 @@ runs:
         script: |
           const [owner, repo] = '${{ inputs.repo }}'.split('/');
           const apiUrl = '${{ github.api_url }}';
+          const ghesToken = '${{ inputs.ghes-token }}'
           try {
             const data = apiUrl !== 'https://api.github.com'
               ? await (async () => {
                   const url = `${apiUrl}/repos/${owner}/${repo}/releases/latest`;
-                  const response = await fetch(url, {
-                    headers: { 'Authorization': 'token ' + '${{ inputs.komac-token }}' }
-                  });
+                  const response = await fetch(url, ghesToken !== ''
+                    ? { headers: { 'Authorization': `token ${ghesToken}`' } }
+                    : {}
+                  );
                   return await response.json();
                 })()
               : await (async () => {
