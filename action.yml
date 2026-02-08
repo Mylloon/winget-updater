@@ -63,7 +63,7 @@ runs:
               ? await (async () => {
                   const url = `${apiUrl}/repos/${owner}/${repo}/releases/latest`;
                   const response = await fetch(url, ghesToken !== ''
-                    ? { headers: { 'Authorization': `token ${ghesToken}`' } }
+                    ? { headers: { 'Authorization': `token ${ghesToken}` } }
                     : {}
                   );
                   return await response.json();
